@@ -1,25 +1,22 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "/api",
+  baseURL: "http://localhost:5000/api",
   timeout: 10000,
-  headers: {
-    "Content-Type": "application/json",
-  },
+  
 });
 
 export async function uploadExpenseFile(file) {
   const formData = new FormData();
   formData.append("file", file);
 
-  // Placeholder only — no backend is connected in this build.
-  // Replace with a real endpoint when the API is ready, e.g.:
-  // const response = await api.post("/expenses/upload", formData, {
-  //   headers: { "Content-Type": "multipart/form-data" },
-  // });
-  // return response.data;
+  const response = await api.post("/analyze", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 
-  return Promise.resolve({ status: "mocked", fileName: file?.name ?? null });
+  return response.data;
 }
 
 export async function fetchExpenseAnalysis() {

@@ -2,26 +2,47 @@ import { useCallback, useState } from "react";
 import { uploadExpenseFile } from "../services/api";
 
 export function useExpenseUpload() {
-  const [status, setStatus] = useState("idle"); // idle | uploading | analyzing | done
+  const [status, setStatus] = useState("idle");
   const [fileName, setFileName] = useState(null);
+  const [dashboardData, setDashboardData] = useState(null);
+  const [error, setError] = useState(null);
 
   const startAnalysis = useCallback(async (file) => {
-    setFileName(file?.name ?? "expenses.csv");
-    setStatus("uploading");
+    try {
+      setError(null);
+      setFileName(file?.name ?? "expenses.csv");
+      setStatus("uploading");
 
-    await uploadExpenseFile(file);
+      const data = await uploadExpenseFile(file);
 
-    setStatus("analyzing");
+      setStatus("analyzing");
 
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Optional: keeps the loading animation visible briefly
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    setStatus("done");
+      setDashboardData(data);
+
+      setStatus("done");
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.error || "Failed to analyze expenses.");
+      setStatus("idle");
+    }
   }, []);
 
   const reset = useCallback(() => {
     setStatus("idle");
     setFileName(null);
+    setDashboardData(null);
+    setError(null);
   }, []);
 
-  return { status, fileName, startAnalysis, reset };
+  return {
+    status,
+    fileName,
+    dashboardData,
+    error,
+    startAnalysis,
+    reset,
+  };
 }

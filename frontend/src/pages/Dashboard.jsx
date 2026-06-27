@@ -10,7 +10,13 @@ import Button from "../components/common/Button";
 import { useExpenseUpload } from "../hooks/useExpenseUpload";
 
 export default function Dashboard() {
-  const { status, startAnalysis, reset } = useExpenseUpload();
+  const {
+  status,
+  dashboardData,
+  error,
+  startAnalysis,
+  reset,
+} = useExpenseUpload();
 
   const isAnalyzing = status === "uploading" || status === "analyzing";
   const isDone = status === "done";
@@ -26,34 +32,46 @@ export default function Dashboard() {
               AI Expense Analyzer
             </h1>
             <p className="text-ink-soft mt-1">
-              Upload a statement to see where your money is going.
+              a statement to see where your money is going.
             </p>
           </div>
           {isDone && (
             <Button variant="ghost" size="sm" onClick={reset}>
-              Upload another file
+              another file
             </Button>
           )}
         </div>
 
         {!isDone && (
-          <div className="max-w-xl">
-            <UploadCard onAnalyze={startAnalysis} disabled={isAnalyzing} />
-          </div>
-        )}
+  <>
+    <div className="max-w-xl">
+      <UploadCard onAnalyze={startAnalysis} disabled={isAnalyzing} />
+    </div>
+
+    {error && (
+      <div className="mt-4 max-w-xl rounded-lg border border-red-300 bg-red-100 p-3 text-red-700">
+        {error}
+      </div>
+    )}
+  </>
+)}
 
         {isAnalyzing && <LoadingSpinner label="Analyzing your expenses..." />}
 
         {isDone && (
           <div className="space-y-8 animate-fade-up">
-            <StatsGrid />
+            <StatsGrid statistics={dashboardData.statistics} />
 
             <div className="grid lg:grid-cols-2 gap-5">
-              <PieChartCard />
-              <BarChartCard />
+              <PieChartCard categoryData={dashboardData.charts.categoryData} />
+              <BarChartCard
+    monthlyData={dashboardData.charts.monthlyData}
+/>
             </div>
 
-            <InsightsGrid />
+           <InsightsGrid
+    aiInsights={dashboardData.aiInsights}
+/>
           </div>
         )}
       </main>

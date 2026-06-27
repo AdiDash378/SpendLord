@@ -1,6 +1,6 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import Card from "../common/Card";
-import { categoryDistribution } from "../../utils/mockData";
+
 import { formatCurrency } from "../../utils/formatCurrency";
 
 function CustomTooltip({ active, payload }) {
@@ -13,7 +13,21 @@ function CustomTooltip({ active, payload }) {
   );
 }
 
-export default function PieChartCard() {
+export default function PieChartCard({ categoryData }) {
+  const COLORS = [
+  "#2563eb",
+  "#10b981",
+  "#f59e0b",
+  "#ef4444",
+  "#8b5cf6",
+  "#06b6d4",
+];
+
+const chartData = categoryData.map((item, index) => ({
+  name: item.category,
+  value: item.amount,
+  color: COLORS[index % COLORS.length],
+}));
   return (
     <Card className="p-6">
       <h3 className="font-semibold text-ink tracking-tight mb-1">Expense Distribution</h3>
@@ -23,7 +37,7 @@ export default function PieChartCard() {
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
-              data={categoryDistribution}
+              data={chartData}
               dataKey="value"
               nameKey="name"
               innerRadius={62}
@@ -31,7 +45,7 @@ export default function PieChartCard() {
               paddingAngle={2}
               stroke="none"
             >
-              {categoryDistribution.map((entry) => (
+              {chartData.map((entry) => (
                 <Cell key={entry.name} fill={entry.color} />
               ))}
             </Pie>

@@ -9,7 +9,7 @@ import {
   Cell,
 } from "recharts";
 import Card from "../common/Card";
-import { monthlySpending } from "../../utils/mockData";
+
 import { formatCurrency } from "../../utils/formatCurrency";
 
 function CustomTooltip({ active, payload, label }) {
@@ -21,11 +21,19 @@ function CustomTooltip({ active, payload, label }) {
   );
 }
 
-export default function BarChartCard() {
-  const maxIndex = monthlySpending.reduce(
-    (maxIdx, item, idx, arr) => (item.amount > arr[maxIdx].amount ? idx : maxIdx),
-    0
-  );
+export default function BarChartCard({ monthlyData }) {
+  const chartData = (monthlyData || []).map((item) => ({
+  month: item.month.slice(5), // "2026-06" -> "06"
+  amount: item.expense,
+}));
+  const maxIndex =
+  chartData.length > 0
+    ? chartData.reduce(
+        (maxIdx, item, idx, arr) =>
+          item.amount > arr[maxIdx].amount ? idx : maxIdx,
+        0
+      )
+    : -1;
 
   return (
     <Card className="p-6">
@@ -34,7 +42,7 @@ export default function BarChartCard() {
 
       <div className="h-72">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={monthlySpending} margin={{ top: 8, right: 4, left: -16, bottom: 0 }}>
+          <BarChart data={chartData} margin={{ top: 8, right: 4, left: -16, bottom: 0 }}>
             <CartesianGrid vertical={false} stroke="#E7E5E2" />
             <XAxis
               dataKey="month"
@@ -50,7 +58,7 @@ export default function BarChartCard() {
             />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: "#EEEEFD" }} />
             <Bar dataKey="amount" radius={[8, 8, 8, 8]} maxBarSize={36}>
-              {monthlySpending.map((entry, index) => (
+              {chartData.map((entry, index) => (
                 <Cell
                   key={entry.month}
                   fill={index === maxIndex ? "#5B5FEF" : "#C7C9F8"}
