@@ -8,10 +8,11 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
  * @returns {Promise<Object>} AI insights as JSON
  */
 const getAIInsights = async (statistics) => {
+  console.log("API Key loaded:", process.env.GEMINI_API_KEY?.slice(0, 10));
   const prompt = buildPrompt(statistics);
 
   const response = await ai.models.generateContent({
-    model: "gemini-2.0-flash",
+    model: "gemini-3.5-flash",
     contents: prompt,
   });
 
