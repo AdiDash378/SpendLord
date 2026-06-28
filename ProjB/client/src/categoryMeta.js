@@ -1,0 +1,55 @@
+import {
+  Briefcase,
+  TrendingUp,
+  RotateCcw,
+  ArrowDownLeft,
+  PlusCircle,
+  ShoppingCart,
+  UtensilsCrossed,
+  Car,
+  Zap,
+  Home,
+  ShoppingBag,
+  Film,
+  HeartPulse,
+  ShieldCheck,
+  Repeat,
+  GraduationCap,
+  Plane,
+  Receipt,
+  Landmark,
+  ArrowUpRight,
+  Banknote,
+  Circle,
+} from "lucide-react";
+
+export const CATEGORY_META = {
+  Salary: { icon: Briefcase, group: "income" },
+  "Business Income": { icon: TrendingUp, group: "income" },
+  "Investment Income": { icon: TrendingUp, group: "income" },
+  Refund: { icon: RotateCcw, group: "income" },
+  "Transfer In": { icon: ArrowDownLeft, group: "income" },
+  "Other Income": { icon: PlusCircle, group: "income" },
+
+  Groceries: { icon: ShoppingCart, group: "expense" },
+  "Dining & Restaurants": { icon: UtensilsCrossed, group: "expense" },
+  Transportation: { icon: Car, group: "expense" },
+  Utilities: { icon: Zap, group: "expense" },
+  "Rent & Housing": { icon: Home, group: "expense" },
+  Shopping: { icon: ShoppingBag, group: "expense" },
+  Entertainment: { icon: Film, group: "expense" },
+  Healthcare: { icon: HeartPulse, group: "expense" },
+  Insurance: { icon: ShieldCheck, group: "expense" },
+  Subscriptions: { icon: Repeat, group: "expense" },
+  Education: { icon: GraduationCap, group: "expense" },
+  Travel: { icon: Plane, group: "expense" },
+  "Fees & Charges": { icon: Receipt, group: "expense" },
+  "Loan & EMI": { icon: Landmark, group: "expense" },
+  "Transfer Out": { icon: ArrowUpRight, group: "expense" },
+  "Cash Withdrawal": { icon: Banknote, group: "expense" },
+  "Other Expense": { icon: Circle, group: "expense" },
+};
+
+export function getCategoryIcon(category) {
+  return CATEGORY_META[category]?.icon ?? Circle;
+}
